@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<body>
+      <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src = "pixi.js"></script>
+    <script src = "jsface.js"></script>
+    <script src="edge.js"></script>
+    <script src="MazeData.js"></script>
+    <script src="EdgeElement.js"></script>
+    <script src ="VertexElement.js"></script>
+    <script src = "Controller.js"></script>
+    <script src="prefrences.js"></script>
+    <script src="Jonah.js"></script>
+    <script src ="MazeMV.js"></script>
+<script type="text/javascript" src = "maze.js"></script>
+
+
+<script>
+    
+    
+    
+    
+    
+    
+    
+    
+                                        //Maze
+    
+    
+    
+    
+    
+    
+    
+    
+     var stage = new PIXI.Stage(0x0000);
+    var renderer = PIXI.autoDetectRenderer(document.body.scrollWidth,document.body.scrollHeight-5);
+    document.body.appendChild(renderer.view);
+    requestAnimFrame( animate );
+    var Maze = new maze(10,10,2600,150);
+    var MD = new mazedata(Maze.adjlist,Maze.realEdge,Maze.realVertex,Maze.width);
+    var hello = new MazeMV(MD,stage);
+
+    
+    
+    
+    
+    
+    
+                                    //character
+    
+    var P = new pref(700,700,700,1900);
+    var jonah = new Jonah((6/50)*3800,(6/50)*2400,MD,P,Maze.s,hello);
+    var controller = new Controller(jonah);
+    jonah.x =  Maze.realVertex[Maze.s].x;
+    jonah.y = Maze.realVertex[Maze.s].y;
+    var j = new PIXI.Sprite(PIXI.Texture.fromImage("test.png"));
+    j.anchor.x = 0.5;
+    j.anchor.y =0.5;
+    j.scale.x = 6/50;
+    j.scale.y = 6/50;
+    j.position.x = jonah.x;
+    j.position.y = jonah.y;
+    stage.addChild(j);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                                        //keyevents
+    
+    
+    var keystate = [];
+    var keystate_ = [];
+    var keypressed =false;
+    var keyreleased =false;
+       document.addEventListener('keydown', function(event) {
+		keystate[event.keyCode] = true;
+        keystate_[event.keyCode] = false;
+	});
+ 
+	document.addEventListener  ('keyup', function(event) {
+		keystate[event.keyCode] = false;
+        keystate_[event.keyCode]= true;
+	});
+  
+    document.addEventListener("keydown", KeyboardEventdown, false);
+    document.addEventListener("keyup", KeyboardEventup, false);
+    function KeyboardEventdown(event) {
+        x = event.keyCode;
+        if (x == 65 || 83 || 87 || 68 || 32) // left, down, up, right
+        {
+            keypressed = true;
+        }
+            
+        
+    }
+    function KeyboardEventup(event) {
+        x = event.keyCode;
+        if (x == 65 || 83 || 87 || 68 || 32) // left, down, up, right
+        {
+            keyreleased = true;
+        }
+    }
+    function animate() {
+ 
+        requestAnimFrame( animate );
+        controller.input(keystate,keypressed,keyreleased);
+        j.position.x = jonah.x;
+        j.position.y = jonah.y;
+        //reads new state from model
+        // render the stage   
+        renderer.render(stage);
+    }
+</script>
+
+</body>
+</html> 
